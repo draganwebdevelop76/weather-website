@@ -8,6 +8,7 @@ fetch('http://localhost:3000/puzzle').then((response)=>{
 })
 */
 
+console.log("javaScript clientside")
 
 const weatherForm = document.querySelector('form')
 const search = document.querySelector('input')
