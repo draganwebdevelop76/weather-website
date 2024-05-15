@@ -1,0 +1,33 @@
+const http = require('http')
+
+function giveCoordinates (grad,callback){
+
+    const url = 'http://localhost:3000/mapboxresponse' + grad + ''
+
+    const request = http.request(url, (response) => {
+     let data = ''
+        response.on('data', (chunk) => {
+            data = data + chunk.toString()
+        })
+        response.on('end', () => {
+            const body = JSON.parse(data)
+            console.log(body.query)
+
+            callback(undefined, {
+               latitude: body.features[0].geometry.coordinates[0],
+                longitude: body.features[0].geometry.coordinates[1]
+                
+            })
+        
+         })
+    })
+
+    request.on('error', (error) => {        
+        callback('Unable to connect to locatiln services', undefined)
+    })
+    request.end()
+}
+
+module.exports = {
+    giveCoordinates: giveCoordinates
+}

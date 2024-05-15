@@ -1,0 +1,31 @@
+const request = require('http')
+
+function weatherFromCoordinates (sirina, duzina, callback){
+    const http = require('http')
+    const url = 'http://localhost:1337/weatherstack/weather/' + sirina + ',' + duzina
+
+    const request = http.request(url, (response) => {
+        let data = ''
+        response.on('data', (chunk) => {
+            data = data + chunk.toString()
+        })
+        response.on('end', () => {
+            const body = JSON.parse(data)
+            callback(undefined, {
+                currentTemperature: body.current.temparature,
+                currentFeelslike: body.current.feelslike
+            })
+            //console.log(`Trenutno je ${body.current.temparature} stepeni, a subjektivni osecaj je da je ${body.current.feelslike} stepeni`)
+         })
+    })
+    request.on('error', (error) => {        //ovde useru saljemo objasnjenje greske
+        callback('Web site is not avaible, error report je: ')
+        
+    })
+    request.end()
+}
+
+
+module.exports = {
+weatherFromCoordinates: weatherFromCoordinates
+}
